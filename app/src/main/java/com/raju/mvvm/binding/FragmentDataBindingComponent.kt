@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.android.example.github.binding
+package com.raju.mvvm.binding
 
 import android.databinding.DataBindingComponent
 import android.support.v4.app.Fragment
-import com.raju.mvvm.binding.FragmentBindingAdapters
 
 /**
  * A Data Binding Component implementation for fragments.

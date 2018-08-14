@@ -17,7 +17,6 @@ import com.raju.mvvm.ui.adapters.base.DataBoundListAdapter
 class UserAdapter(
         private val dataBindingComponent: DataBindingComponent,
         appExecutors: AppExecutors,
-        private val showFullName: Boolean,
         private val repoClickCallback: ((User) -> Unit)?
 ) : DataBoundListAdapter<User, LayoutUserItemBinding>(
         appExecutors = appExecutors,
@@ -40,7 +39,6 @@ class UserAdapter(
                 false,
                 dataBindingComponent
         )
-        binding.showFullName = showFullName
         binding.root.setOnClickListener {
             binding.user?.let {
                 repoClickCallback?.invoke(it)

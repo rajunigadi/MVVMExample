@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment
 import android.widget.ImageView
 
 import com.bumptech.glide.Glide
+import com.raju.mvvm.R
 
 import javax.inject.Inject
 
@@ -29,8 +30,11 @@ import javax.inject.Inject
  */
 //@OpenForTesting
 class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
-    @BindingAdapter("imageUrl")
-    fun bindImage(imageView: ImageView, url: String?) {
-        Glide.with(fragment).load(url).into(imageView)
+    @BindingAdapter("avatarUrl")
+    fun bindImage(imageView: ImageView, avatarUrl: String?) {
+        Glide.with(fragment)
+                .load(avatarUrl)
+                .placeholder(R.mipmap.ic_launcher)
+                .into(imageView)
     }
 }

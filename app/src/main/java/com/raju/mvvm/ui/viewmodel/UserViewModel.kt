@@ -7,51 +7,15 @@ import com.raju.mvvm.data.model.User
 import com.raju.mvvm.data.source.UserRepository
 import javax.inject.Inject
 import android.arch.lifecycle.Transformations
+import android.databinding.BindingAdapter
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.raju.mvvm.R
 import com.raju.mvvm.data.model.base.Resource
 import com.raju.mvvm.ui.livedata.AbsentLiveData
 
 
 class UserViewModel @Inject constructor(private val userRepository: UserRepository): ViewModel() {
-
-    /*
-    private val matchResult: MutableLiveData<MutableList<User>> = MutableLiveData()
-    private val matchError: MutableLiveData<String> = MutableLiveData()
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
-    fun userResult(): LiveData<MutableList<User>> {
-        return matchResult
-    }
-
-    fun userError(): LiveData<String> {
-        return matchError
-    }
-
-    fun loadUsers() {
-        compositeDisposable.add(userRepository.getUsers()!!
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        Consumer<MutableList<User>> {
-                            it -> matchResult.postValue(it)
-                        },
-                        Consumer {
-                            t -> matchError.postValue(t.message)
-                        }
-                ))
-    }
-
-    fun searchUsers(text:String): Observable<MutableList<User>> {
-        return userRepository.searchUsers(text)!!
-    }
-
-    fun disposeElements() {
-        compositeDisposable.clear()
-    }
-    */
-
-    fun loadUsers() {
-        userRepository.loadUser()
-    }
 
     private val _users = MutableLiveData<List<User>>()
 
@@ -64,5 +28,9 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
         _users.value?.let {
             _users.value = it
         }
+    }
+
+    fun loadUsers() {
+        _users.postValue(userRepository.loadUser().value?.data)
     }
 }

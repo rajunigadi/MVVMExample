@@ -19,7 +19,6 @@ package com.raju.mvvm.ui.fragments
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.databinding.DataBindingComponent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -27,18 +26,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.android.example.github.binding.FragmentDataBindingComponent
-
 import com.raju.mvvm.AppExecutors
 import com.raju.mvvm.R
+import com.raju.mvvm.binding.FragmentDataBindingComponent
 import com.raju.mvvm.dagger.Injectable
 import com.raju.mvvm.databinding.UserFragmentBinding
 import com.raju.mvvm.ui.adapters.UserAdapter
 import com.raju.mvvm.ui.adapters.base.RetryCallback
 import com.raju.mvvm.ui.viewmodel.UserViewModel
 import com.raju.mvvm.utilities.autoCleared
-import dagger.android.AndroidInjector
-import dagger.android.support.AndroidSupportInjection
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -82,8 +78,7 @@ class UserFragment : Fragment(), Injectable {
                 .get(UserViewModel::class.java)
         val rvAdapter = UserAdapter(
             dataBindingComponent = dataBindingComponent,
-            appExecutors = appExecutors,
-            showFullName = false
+            appExecutors = appExecutors
         ) { repo ->
             // navController().navigate(UserFragmentDirections.showRepo(repo.owner.login, repo.name))
             Timber.d("onClick")
@@ -93,7 +88,7 @@ class UserFragment : Fragment(), Injectable {
 
         userViewModel.loadUsers()
         userViewModel.users.observe(this, Observer {
-            repos -> adapter.submitList(repos?.data)
+            it -> adapter.submitList(it?.data)
         })
     }
 }
