@@ -1,10 +1,7 @@
 package com.raju.mvvm.dagger.components
 
 import com.raju.mvvm.MVVMApp
-import com.raju.mvvm.dagger.modules.base.ActivityBindingModule
-import com.raju.mvvm.dagger.modules.base.AppModule
-import com.raju.mvvm.dagger.modules.base.DatabaseModule
-import com.raju.mvvm.dagger.modules.base.NetworkModule
+import com.raju.mvvm.dagger.modules.base.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -20,7 +17,9 @@ import javax.inject.Singleton
         AppModule::class,
         NetworkModule::class,
         DatabaseModule::class,
-        ActivityBindingModule::class))
+        ActivityBindingModule::class,
+        FragmentBuildersModule::class,
+        ViewModelModule::class))
 interface AppComponent {
 
     @Component.Builder

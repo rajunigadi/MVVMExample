@@ -1,16 +1,55 @@
 package com.raju.mvvm.ui.adapters
 
-import com.raju.mvvm.data.model.base.ListItem
-import com.raju.mvvm.ui.adapters.delegates.UserDelegate
-import com.raju.mvvm.ui.adapters.delegates.base.AdapterDelegate
-import com.raju.mvvm.ui.adapters.delegates.base.DelegatingListAdapter
-import com.raju.mvvm.ui.adapters.delegates.base.ListAdapterDelegate
-import javax.inject.Inject
+import android.support.v7.util.DiffUtil
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.raju.mvvm.AppExecutors
+import com.raju.mvvm.R
+import com.raju.mvvm.data.model.User
+import android.databinding.DataBindingComponent
+import android.databinding.DataBindingUtil
+import com.raju.mvvm.databinding.LayoutUserItemBinding
+import com.raju.mvvm.ui.adapters.base.DataBoundListAdapter
 
-class UserAdapter @Inject internal constructor() : DelegatingListAdapter<ListItem>() {
+/**
+ * A RecyclerView adapter for [Repo] class.
+ */
+class UserAdapter(
+        private val dataBindingComponent: DataBindingComponent,
+        appExecutors: AppExecutors,
+        private val showFullName: Boolean,
+        private val repoClickCallback: ((User) -> Unit)?
+) : DataBoundListAdapter<User, LayoutUserItemBinding>(
+        appExecutors = appExecutors,
+        diffCallback = object : DiffUtil.ItemCallback<User>() {
+            override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem.name == newItem.name
+            }
 
-    override fun createDelegates(): Array<AdapterDelegate<MutableList<ListItem>>> {
-        val delegate: ListAdapterDelegate<ListItem> = clickable(UserDelegate() as ListAdapterDelegate<ListItem>)
-        return arrayOf(delegate)
+            override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+                return oldItem.name == newItem.name
+            }
+        }
+) {
+
+    override fun createBinding(parent: ViewGroup): LayoutUserItemBinding {
+        val binding = DataBindingUtil.inflate<LayoutUserItemBinding>(
+                LayoutInflater.from(parent.context),
+                R.layout.layout_user_item,
+                parent,
+                false,
+                dataBindingComponent
+        )
+        binding.showFullName = showFullName
+        binding.root.setOnClickListener {
+            binding.user?.let {
+                repoClickCallback?.invoke(it)
+            }
+        }
+        return binding
+    }
+
+    override fun bind(binding: LayoutUserItemBinding, item: User) {
+        binding.user = item
     }
 }

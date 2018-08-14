@@ -1,5 +1,6 @@
 package com.raju.mvvm.data.source.local.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
@@ -21,8 +22,8 @@ interface UserDao {
     fun add(users: List<User>)
 
     @Query("SELECT * FROM user")
-    fun getUsers(): MutableList<User>
+    fun getUsers(): LiveData<List<User>>
 
     @Query("SELECT * FROM user WHERE name LIKE :text")
-    fun searchUsers(text: String): MutableList<User>
+    fun searchUsers(text: String): List<User>
 }

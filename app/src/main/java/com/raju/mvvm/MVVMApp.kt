@@ -3,6 +3,7 @@ package com.raju.mvvm
 import android.app.Activity
 import android.app.Application
 import android.support.multidex.MultiDexApplication
+import com.raju.mvvm.dagger.AppInjector
 import com.raju.mvvm.dagger.components.DaggerAppComponent
 import com.raju.mvvm.utilities.DebugLogTree
 import dagger.android.AndroidInjector
@@ -26,11 +27,7 @@ class MVVMApp: MultiDexApplication(), HasActivityInjector {
             Timber.plant(DebugLogTree())
         }
 
-        DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this)
+        AppInjector.init(this)
     }
 
 }

@@ -1,36 +1,46 @@
 package com.raju.mvvm.data.source
 
+import android.arch.lifecycle.LiveData
+import com.raju.mvvm.AppExecutors
 import com.raju.mvvm.data.model.User
+import com.raju.mvvm.data.model.base.Resource
 import com.raju.mvvm.data.source.local.dao.UserDao
 import com.raju.mvvm.data.source.remote.api.UserApi
+import com.raju.mvvm.utilities.RateLimiter
 import io.reactivex.Observable
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepository @Inject constructor(private val userApi: UserApi, private val userDao: UserDao) {
+// to do testing
+//@OpenForTesting
+@Singleton
+class UserRepository @Inject constructor(
+        private val appExecutors: AppExecutors,
+        private val userDao: UserDao,
+        private val userApi: UserApi) {
 
-    fun getUsers(): Observable<MutableList<User>>? {
-        val observableApi = getUsersFromApi()
-        val observableLocal = getUsersFromLocal()
-        val observable = Observable.concatArrayEager(observableLocal, observableApi)
-        return observable!!
-    }
+    private val userListRateLimit = RateLimiter<String>(1, TimeUnit.MINUTES)
 
-    private fun getUsersFromApi(): Observable<MutableList<User>>? {
-        return userApi.getUsers()
-                .doOnNext {
-                    t: MutableList<User> ->
-                    for (item in t) {
-                        userDao.add(item)
-                    }
-                }
-    }
+    fun loadUser(): LiveData<Resource<List<User>>> {
+        return object : NetworkBoundResource<List<User>, List<User>>(appExecutors) {
+            override fun saveCallResult(item: List<User>) {
+                userDao.add(item)
+            }
 
-    private fun getUsersFromLocal(): Observable<MutableList<User>>? {
-        return Observable.just(userDao.getUsers()).doOnNext { Timber.d("Size: ${it.size}") }
-    }
+            override fun shouldFetch(data: List<User>?): Boolean {
+                Timber.d("Data ${data}")
+                return data == null || data.isEmpty() || userListRateLimit.shouldFetch("users")
+            }
 
-    fun searchUsers(text: String): Observable<MutableList<User>>? {
-        return Observable.just(userDao.searchUsers(text)).doOnNext { Timber.d("Size: ${it.size}") }
+            override fun loadFromDb() = userDao.getUsers()
+
+            override fun createCall() = userApi.getUsers()
+
+            override fun onFetchFailed() {
+                userListRateLimit.reset("users")
+            }
+        }.asLiveData()
     }
 }

@@ -1,6 +1,8 @@
 package com.raju.mvvm.data.source.remote.api
 
+import android.arch.lifecycle.LiveData
 import com.raju.mvvm.data.model.User
+import com.raju.mvvm.data.source.remote.api.base.ApiResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -10,5 +12,5 @@ import retrofit2.http.Path
  */
 interface UserApi {
     @GET("/users")
-    fun getUsers(): Observable<MutableList<User>>
+    fun getUsers(): LiveData<ApiResponse<List<User>>>
 }
