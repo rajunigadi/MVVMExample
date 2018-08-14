@@ -22,4 +22,7 @@ interface UserDao {
 
     @Query("SELECT * FROM user")
     fun getUsers(): MutableList<User>
+
+    @Query("SELECT * FROM user WHERE name LIKE :text")
+    fun searchUsers(text: String): MutableList<User>
 }

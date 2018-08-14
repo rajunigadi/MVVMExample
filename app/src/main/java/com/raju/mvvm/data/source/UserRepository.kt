@@ -29,4 +29,8 @@ class UserRepository @Inject constructor(private val userApi: UserApi, private v
     private fun getUsersFromLocal(): Observable<MutableList<User>>? {
         return Observable.just(userDao.getUsers()).doOnNext { Timber.d("Size: ${it.size}") }
     }
+
+    fun searchUsers(text: String): Observable<MutableList<User>>? {
+        return Observable.just(userDao.searchUsers(text)).doOnNext { Timber.d("Size: ${it.size}") }
+    }
 }
