@@ -9,6 +9,7 @@
 /.idea/jarRepositories.xml
 /.idea/*.xml
 /.idea/*.iml
+/.idea/misc.xml
 /.idea/*
 .DS_Store
 /build
