@@ -25,8 +25,8 @@ subprojects {
         outputColorName.set("RED")
         ignoreFailures.set(true)
         reporters {
-            reporter(ReporterType.PLAIN)
             reporter(ReporterType.CHECKSTYLE)
+            reporter(ReporterType.PLAIN_GROUP_BY_FILE)
         }
     }
 }
