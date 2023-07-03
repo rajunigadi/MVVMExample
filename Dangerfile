@@ -18,16 +18,6 @@ end
 #  junit.report
 #end
 
-# android lints
-#android_lint.report_file = "app/build/reports/lint-results-debug.xml"
-#android_lint.filtering = true
-#android_lint.skip_gradle_task = true
-#android_lint.lint(inline_mode: true)
-
-# ktlint
-#checkstyle_format.base_path = Dir.pwd
-#checkstyle_format.report 'app/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml'
-
 # To support multi module projects, identify defined modules via the settings.gradle.kts
 # Open the file `settings.gradle.kts`
 File.open("settings.gradle.kts", "r") do |file_handle|
