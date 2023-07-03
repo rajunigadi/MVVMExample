@@ -1,46 +1,32 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id("com.android.application").version("7.4.2").apply(false)
     id("com.android.library").version("7.4.2").apply(false)
     id("org.jetbrains.kotlin.android").version("1.8.21").apply(false)
     id("com.google.dagger.hilt.android").version("2.44").apply(false)
+    id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
 }
 
-val ktlint by configurations.creating
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint") // version should be inherited from parent
 
-dependencies {
-    ktlint("com.pinterest:ktlint:0.50.0") {
-        attributes {
-            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+    repositories {
+        // required to download ktlint
+        mavenCentral()
+    }
+
+    // Optionally configure plugin
+    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+        debug.set(true)
+        android.set(false)
+        outputToConsole.set(true)
+        outputColorName.set("RED")
+        ignoreFailures.set(true)
+        reporters {
+            reporter(ReporterType.PLAIN)
+            reporter(ReporterType.CHECKSTYLE)
         }
     }
-    // ktlint(project(":custom-ktlint-ruleset")) // in case of custom ruleset
-}
-
-val ktlintCheck by tasks.registering(JavaExec::class) {
-    group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Check Kotlin code style"
-    classpath = ktlint
-    mainClass.set("com.pinterest.ktlint.Main")
-    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-    args(
-        "**/src/**/*.kt",
-        "**.kts",
-        "!**/build/**",
-    )
-}
-
-tasks.register<JavaExec>("ktlintFormat") {
-    group = LifecycleBasePlugin.VERIFICATION_GROUP
-    description = "Check Kotlin code style and format"
-    classpath = ktlint
-    mainClass.set("com.pinterest.ktlint.Main")
-    jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
-    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
-    args(
-        "-F",
-        "**/src/**/*.kt",
-        "**.kts",
-        "!**/build/**",
-    )
 }
