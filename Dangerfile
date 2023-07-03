@@ -4,6 +4,12 @@ github.dismiss_out_of_range_messages
 # Issue a warning if a pull request has WIP (Work in Progress) in the title.
 warn('PR is classed as Work in Progress') if github.pr_title.include? '[WIP]'
 
+# Add a CHANGELOG entry for app changes
+if !git.modified_files.include?("CHANGELOG.md") && has_app_changes
+  fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/realm/jazzy/blob/master/CHANGELOG.md).")
+  message "Note, we hard-wrap at 80 chars and use 2 spaces after the last line."
+end
+
 # unit testing
 #junit_tests_dir = "path/to/your/results/**/*.xml"
 #Dir[junit_tests_dir].each do |file_name|
