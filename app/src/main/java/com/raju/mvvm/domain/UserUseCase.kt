@@ -10,11 +10,9 @@ class UserUseCase(
     private val repository: UserRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : BaseUseCase {
-
     override suspend fun login(username: String, password: String): Flow<User> {
         return flow { emit(repository.login(username, password)) }.flowOn(dispatcherProvider.io)
     }
-
     override suspend fun getUsers(): Flow<List<User>> {
         return flow { emit(repository.getUsers()) }.flowOn(dispatcherProvider.io)
     }
