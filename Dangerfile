@@ -35,6 +35,8 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         if File.file?(checkstyleFile)
             checkstyle_format.base_path = Dir.pwd
             checkstyle_format.report(checkstyleFile, inline_mode: true)
+        else
+            message "checkstyleFile not present"
         end
 
         # Process Android-Lint results
@@ -52,6 +54,8 @@ File.open("settings.gradle.kts", "r") do |file_handle|
             end
             android_lint.filtering = true
             android_lint.lint(inline_mode: true)
+        else
+            message "androidLintFile & androidLintDebugFile both not present"
         end
 
         # Process Detekt results
@@ -63,6 +67,8 @@ File.open("settings.gradle.kts", "r") do |file_handle|
             kotlin_detekt.severity = "warning"
             kotlin_detekt.filtering = true
             kotlin_detekt.detekt(inline_mode: true)
+        else
+            message "detektFile not present"
         end
     end
   end
