@@ -31,6 +31,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
 
         # Process check-style results
         checkstyleFile = String.new(gradleModule + "/build/reports/checkstyle/checkstyle.xml")
+        message "checkstyle file path" + checkstyleFile
         if File.file?(checkstyleFile)
             checkstyle_format.base_path = Dir.pwd
             checkstyle_format.report(checkstyleFile, inline_mode: true)
@@ -39,6 +40,8 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         # Process Android-Lint results
         androidLintFile = String.new(gradleModule + "/build/reports/lint-results.xml")
         androidLintDebugFile = String.new(gradleModule + "/build/reports/lint-results-debug.xml")
+        message "androidLintFile file path" + androidLintFile
+        message "androidLintDebugFile file path" + androidLintDebugFile
         if File.file?(androidLintFile) || File.file?(androidLintDebugFile)
             android_lint.skip_gradle_task = true # do this if lint was already run in a previous build step
             android_lint.severity = "Warning"
@@ -53,6 +56,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
 
         # Process Detekt results
         detektFile = String.new(gradleModule + "/build/reports/detekt.xml")
+        message "detektFile file path" + detektFile
         if File.file?(detektFile)
             kotlin_detekt.report_file = detektFile
             kotlin_detekt.skip_gradle_task = true
