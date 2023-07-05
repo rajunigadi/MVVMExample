@@ -38,8 +38,20 @@ jobs:
       - name: Run ktlint
         run: ./gradlew ktlintCheck
 
+      - name: Upload ktlint reports artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ktlint-reports
+          path: build/reports/*
+
       - name: Run detekt
         run: ./gradlew detektAll
+
+      - name: Upload detekt reports artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: detekt-reports
+          path: build/reports/*
 
       - name: Get directory
         run: ls
@@ -62,14 +74,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Get into reports
-        run: |
-          cd build/reports
-          ls -d "$PWD"/*
-          cd detekt
-          ls -d "$PWD"/*
-          cd ../ktlint
-          ls -d "$PWD"/*
+      - name: Download ktlint reports artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ktlint-reports
+          run: ls
+
+      - name: Download detekt reports artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: detekt-reports
+          run: ls
 
       - name: Set up Ruby 3.2.2
         uses: ruby/setup-ruby@v1
