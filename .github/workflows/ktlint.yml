@@ -99,6 +99,12 @@ jobs:
         with:
           ruby-version: '3.0' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Install danger
+        run: |
+          gem install danger
+          gem install danger-checkstyle_format
+          gem install danger-android_lint
+          gem install danger-kotlin_detekt
       - name: Cache bundle
         uses: actions/cache@v1
         with:
