@@ -41,6 +41,9 @@ jobs:
       - name: Run detekt
         run: ./gradlew detektAll
 
+      - name: Get directory
+        run: ls
+
   danger:
     #needs: [lint, ktlint, detekt]
     if: ${{ always() }}
