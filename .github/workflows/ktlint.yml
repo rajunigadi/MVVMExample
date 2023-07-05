@@ -51,6 +51,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: detekt-reports
+          path: build/reports/*
 
       - name: Get directory
         run: ls
