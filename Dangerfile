@@ -59,7 +59,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         end
 
         # Process Detekt results
-        detektFile = String.new(gradleModule + "/build/reports/detekt.xml")
+        detektFile = String.new("/build/reports/detekt.xml")
         message "detektFile file path: " + detektFile
         if File.file?(detektFile)
             kotlin_detekt.report_file = detektFile
