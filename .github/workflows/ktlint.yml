@@ -45,7 +45,9 @@ jobs:
         run: ls
 
       - name: Get into reports
-        run: cd build/reports
+        run: |
+          cd build/reports
+          ls
 
   danger:
     #needs: [lint, ktlint, detekt]
