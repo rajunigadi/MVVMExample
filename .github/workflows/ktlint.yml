@@ -44,6 +44,9 @@ jobs:
       - name: Get directory
         run: ls
 
+      - name: Get into reports
+        run: cd build/reports
+
   danger:
     #needs: [lint, ktlint, detekt]
     if: ${{ always() }}
