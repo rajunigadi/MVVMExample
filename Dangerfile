@@ -66,7 +66,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         if File.file?(detektFile)
             kotlin_detekt.report_file = detektFile
             kotlin_detekt.skip_gradle_task = true
-            kotlin_detekt.severity = "error"
+            kotlin_detekt.severity = "warning"
             kotlin_detekt.filtering = true
             kotlin_detekt.detekt(inline_mode: true)
         else

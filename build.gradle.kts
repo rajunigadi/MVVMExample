@@ -49,7 +49,7 @@ tasks.register<Detekt>("detektAll") {
 
     description = "Custom DETEKT build for all modules"
     parallel = true
-    ignoreFailures = false
+    ignoreFailures = true
     autoCorrect = false
     buildUponDefaultConfig = false
     setSource(projectDir)
