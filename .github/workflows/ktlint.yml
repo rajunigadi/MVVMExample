@@ -43,7 +43,8 @@ jobs:
 
   danger:
     #needs: [lint, ktlint, detekt]
-    if: always()
+    if: ${{ always() }}
+    needs: [ linting ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
