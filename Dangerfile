@@ -30,7 +30,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         gradleModule = setting[10, setting.length-12]
 
         # Process check-style results
-        checkstyleFile = String.new("/build/reports/checkstyle/checkstyle.xml")
+        checkstyleFile = String.new("/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.xml")
         message "checkstyle file path: " + checkstyleFile
         if File.file?(checkstyleFile)
             checkstyle_format.base_path = Dir.pwd
@@ -59,7 +59,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         end
 
         # Process Detekt results
-        detektFile = String.new("/build/reports/detekt.xml")
+        detektFile = String.new("build/reports/detekt.xml")
         message "detektFile file path: " + detektFile
         if File.file?(detektFile)
             kotlin_detekt.report_file = detektFile
