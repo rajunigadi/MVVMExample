@@ -18,6 +18,17 @@ end
 #  junit.report
 #end
 
+detektFile = String.new("detekt/detekt.xml")
+message "detektFile file path: " + detektFile
+if File.file?(detektFile)
+    kotlin_detekt.report_file = detektFile
+    kotlin_detekt.skip_gradle_task = true
+    kotlin_detekt.severity = "error"
+    kotlin_detekt.filtering = true
+    kotlin_detekt.detekt(inline_mode: true)
+else
+    message "detektFile not present"
+end
 
 
 # To support multi module projects, identify defined modules via the settings.gradle.kts
