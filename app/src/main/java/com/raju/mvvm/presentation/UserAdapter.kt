@@ -29,7 +29,7 @@ class UserAdapter(private val clickListener: (user: User) -> Unit) : ListAdapter
 
         fun bindData(user: User) {
             binding.tvName.text = user.name
-            binding.ivAvatar.load(user.avatarUrl)
+            binding.ivAvatar.load(user.avatar_url)
         }
     }
 

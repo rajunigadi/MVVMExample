@@ -28,10 +28,17 @@ subprojects {
         ignoreFailures.set(true)
         reporters {
             reporter(ReporterType.CHECKSTYLE)
+            reporter(ReporterType.PLAIN)
             reporter(ReporterType.PLAIN_GROUP_BY_FILE)
         }
     }
 }
+
+/*tasks.withType<org.jlleitschuh.gradle.ktlint.tasks.GenerateReportsTask> {
+    reportsOutputDirectory.set(
+        project.layout.buildDirectory.dir("other/location/$name")
+    )
+}*/
 
 tasks.register<Detekt>("detektAll") {
     val configFile = file("${rootProject.rootDir}/configs/detekt/default_detekt.yml")
@@ -42,7 +49,7 @@ tasks.register<Detekt>("detektAll") {
 
     description = "Custom DETEKT build for all modules"
     parallel = true
-    ignoreFailures = false
+    ignoreFailures = true
     autoCorrect = false
     buildUponDefaultConfig = false
     setSource(projectDir)

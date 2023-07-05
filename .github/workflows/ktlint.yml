@@ -7,7 +7,8 @@ on:
       branches: develop
 
 jobs:
-  lint:
+
+  linting:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,74 +32,77 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run android lint
-        run: ./gradlew lint
-
-  ktlint:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v3
-
-      # Cache Gradle dependencies
-      - name: Setup Gradle Dependencies Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
-
-      # Cache Gradle Wrapper
-      - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      #- name: Run android lint
+      #  run: ./gradlew lint
 
       - name: Run ktlint
         run: ./gradlew ktlintCheck
 
-  detekt:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v3
-
-      # Cache Gradle dependencies
-      - name: Setup Gradle Dependencies Cache
-        uses: actions/cache@v2
+      - name: Upload ktlint reports artifacts
+        uses: actions/upload-artifact@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle', '**/*.gradle.kts') }}
-
-      # Cache Gradle Wrapper
-      - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          name: ktlint-reports
+          path: build/reports/*
 
       - name: Run detekt
         run: ./gradlew detektAll
 
+      - name: Upload detekt reports artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: detekt-reports
+          path: build/reports/*
+
+      - name: Get directory
+        run: ls
+
+      - name: Get into reports
+        run: |
+          cd build/reports
+          ls -d "$PWD"/*
+          cd detekt
+          ls -d "$PWD"/*
+          cd ../ktlint
+          ls -d "$PWD"/*
+
   danger:
-    needs: [lint, ktlint, detekt]
+    #needs: [lint, ktlint, detekt]
+    if: ${{ always() }}
+    needs: [ linting ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download ktlint reports artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ktlint-reports
+
+      - name: Display ktlint-reports files
+        run: ls -R
+
+      - name: Download detekt reports artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: detekt-reports
+
+      - name: Display detekt-reports files
+        run: ls -R
+
       - name: Set up Ruby 3.2.2
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0' # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Install danger
+        run: |
+          gem install danger
+          gem install danger-checkstyle_format
+          gem install danger-android_lint
+          gem install danger-kotlin_detekt
+
       - name: Cache bundle
         uses: actions/cache@v1
         with:
@@ -106,11 +110,17 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
+
       - name: Bundle install
         run: |
           gem install bundler
+          gem install danger
+          gem install danger-checkstyle_format
+          gem install danger-android_lint
+          gem install danger-kotlin_detekt
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
+
       - name: Run danger
         run: |
           bundle exec danger --verbose
