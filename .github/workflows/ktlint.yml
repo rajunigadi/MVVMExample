@@ -109,6 +109,10 @@ jobs:
       - name: Bundle install
         run: |
           gem install bundler
+          gem install danger
+          gem install danger-checkstyle_format
+          gem install danger-android_lint
+          gem install danger-kotlin_detekt
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Run danger
