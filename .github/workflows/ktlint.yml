@@ -48,6 +48,7 @@ jobs:
         run: |
           cd build/reports
           ls
+          ls -d "$PWD"/*
 
   danger:
     #needs: [lint, ktlint, detekt]
