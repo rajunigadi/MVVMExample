@@ -5,7 +5,6 @@ github.dismiss_out_of_range_messages
 warn('PR is classed as Work in Progress') if github.pr_title.include? '[WIP]'
 
 # Add a CHANGELOG entry for app changes
-message git.modified_files
 if !git.modified_files.include?("CHANGELOG.md")
   fail("Please include a CHANGELOG entry. \nYou can find it at [CHANGELOG.md](https://github.com/rajunigadi/MVVMExample/CHANGELOG.md).")
   message "Note, we hard-wrap at 80 chars and use 2 spaces after the last line."
@@ -31,7 +30,7 @@ File.open("settings.gradle.kts", "r") do |file_handle|
         gradleModule = setting[10, setting.length-12]
 
         # Process check-style results
-        checkstyleFile = String.new(gradleModule + "/build/reports/checkstyle/checkstyle.xml")
+        checkstyleFile = String.new("/build/reports/checkstyle/checkstyle.xml")
         message "checkstyle file path: " + checkstyleFile
         if File.file?(checkstyleFile)
             checkstyle_format.base_path = Dir.pwd
