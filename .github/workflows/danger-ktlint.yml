@@ -33,7 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
+        run: ./gradlew ktlintCheck --continue
 
       - name: Upload ktlint reports artifacts
         uses: actions/upload-artifact@v3
