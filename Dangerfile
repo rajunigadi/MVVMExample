@@ -21,18 +21,12 @@ end
 #  junit.report
 #end
 
-detektSarifFile = String.new("detekt/detekt.sarif")
-message "detektSarifFile file path: " + detektSarifFile
-
-detektFile = String.new("detekt/detekt.xml")
-message "detektFile file path: " + detektFile
-
-if File.file?(detektSarifFile)
-    kotlin_detekt.report_file = detektSarifFile
-    kotlin_detekt.skip_gradle_task = true
-    kotlin_detekt.severity = "warning"
-    kotlin_detekt.filtering = false
-    kotlin_detekt.detekt(inline_mode: true)
+# Process check-style results
+checkstyleFile = String.new("/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.txt")
+message "checkstyle file path: " + checkstyleFile
+if File.file?(checkstyleFile)
+    checkstyle_format.base_path = Dir.pwd
+    checkstyle_format.report(checkstyleFile, inline_mode: true)
 else
-    message "detektFile not present"
+    message "checkstyleFile not present"
 end
