@@ -3,10 +3,11 @@ name: 🚧 Static Review using Danger
 on:
   push:
     branches: develop
-#  pull_request:
-#    branches: develop
+  pull_request:
+    branches: develop
 
 jobs:
+
   linting:
     runs-on: ubuntu-latest
 
@@ -31,14 +32,24 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run detekt
-        run: ./gradlew detektAll
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
 
-      - name: Upload detekt reports artifacts
+      - name: Upload ktlint reports artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: detekt-reports
-          path: build/reports/*
+          name: ktlint-reports
+          path: app/build/reports/*
+
+      - name: Get directory
+        run: ls
+
+      - name: Get into reports
+        run: |
+          cd app/build/reports
+          ls -d "$PWD"/*
+          cd ktlint
+          ls -d "$PWD"/*
 
   danger:
     #needs: [lint, ktlint, detekt]
@@ -49,12 +60,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download detekt reports artifact
+      - name: Download ktlint reports artifact
         uses: actions/download-artifact@v3
         with:
-          name: detekt-reports
+          name: ktlint-reports
 
-      - name: Display detekt-reports files
+      - name: Display ktlint-reports files
         run: ls -R
 
       - name: Set up Ruby 3.2.2
@@ -90,6 +101,6 @@ jobs:
 
       - name: Run danger
         run: |
-          bundle exec danger --dangerfile=Dangerfile --danger_id=danger-pr --verbose
+          bundle exec danger --verbose
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
