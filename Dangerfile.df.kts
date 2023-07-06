@@ -12,9 +12,6 @@ import kotlinx.datetime.Clock
 import org.apache.commons.text.WordUtils
 import systems.danger.kotlin.*
 import systems.danger.kotlin.models.danger.DangerDSL
-import systems.danger.samples.plugin.SamplePlugin
-
-register plugin SamplePlugin
 
 danger(args) {
     val allSourceFiles = git.modifiedFiles + git.createdFiles
@@ -64,9 +61,9 @@ danger(args) {
     @OptIn(kotlin.time.ExperimentalTime::class)
     message("Coroutines checks terminated - runningFor $runningTime")
 
-    if ((fails + warnings).isEmpty()) {
-        message(":rocket: No errors or warnings!")
-    }
+    //if ((fails + warnings).isEmpty()) {
+    //    message(":rocket: No errors or warnings!")
+    //}
 }
 
 suspend fun DangerDSL.expensiveCheck(name: String, runForMillis: Long) {
