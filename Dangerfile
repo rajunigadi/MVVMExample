@@ -22,7 +22,7 @@ end
 #end
 
 # Process check-style results
-checkstyleFile = String.new("/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.txt")
+checkstyleFile = String.new("/build/reports/ktlint/ktlintKotlinScriptCheck/ktlintKotlinScriptCheck.txt")
 message "checkstyle file path: " + checkstyleFile
 if File.file?(checkstyleFile)
     checkstyle_format.base_path = Dir.pwd
