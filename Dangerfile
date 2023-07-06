@@ -1,6 +1,9 @@
 # Avoid issuing warnings about things that exist before the pull request.
 github.dismiss_out_of_range_messages
 
+# Ensure the PR is not marked as DO NOT MERGE
+fail("PR specifies label DO NOT MERGE") if github.pr_labels.any? { |label| label.include? "DO NOT MERGE" }
+
 # Issue a warning if a pull request has WIP (Work in Progress) in the title.
 warn('PR is classed as Work in Progress') if github.pr_title.include? '[WIP]'
 
