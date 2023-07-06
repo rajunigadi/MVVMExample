@@ -21,10 +21,14 @@ end
 #  junit.report
 #end
 
+detektSarifFile = String.new("detekt/detekt.sarif")
+message "detektSarifFile file path: " + detektSarifFile
+
 detektFile = String.new("detekt/detekt.xml")
 message "detektFile file path: " + detektFile
-if File.file?(detektFile)
-    kotlin_detekt.report_file = detektFile
+
+if File.file?(detektSarifFile)
+    kotlin_detekt.report_file = detektSarifFile
     kotlin_detekt.skip_gradle_task = true
     kotlin_detekt.severity = "warning"
     kotlin_detekt.filtering = true
