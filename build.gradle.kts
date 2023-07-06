@@ -25,7 +25,7 @@ subprojects {
         android.set(false)
         outputToConsole.set(true)
         outputColorName.set("RED")
-        ignoreFailures.set(true)
+        ignoreFailures.set(false)
         reporters {
             reporter(ReporterType.CHECKSTYLE)
             reporter(ReporterType.PLAIN)
