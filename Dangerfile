@@ -31,7 +31,7 @@ if File.file?(detektSarifFile)
     kotlin_detekt.report_file = detektSarifFile
     kotlin_detekt.skip_gradle_task = true
     kotlin_detekt.severity = "warning"
-    kotlin_detekt.filtering = true
+    kotlin_detekt.filtering = false
     kotlin_detekt.detekt(inline_mode: true)
 else
     message "detektFile not present"
