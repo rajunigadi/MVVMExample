@@ -4,20 +4,9 @@ on:
   push:
     branches: develop
 #  pull_request:
-#      branches: develop
+#    branches: develop
 
 jobs:
-
-  build:
-    runs-on: ubuntu-latest
-    name: "Run Danger"
-    steps:
-      - uses: actions/checkout@v1
-      - name: Danger
-        uses: danger/kotlin@1.2.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   linting:
     runs-on: ubuntu-latest
 
@@ -42,18 +31,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      #- name: Run android lint
-      #  run: ./gradlew lint
-
-      - name: Run ktlint
-        run: ./gradlew ktlintCheck
-
-      - name: Upload ktlint reports artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ktlint-reports
-          path: build/reports/*
-
       - name: Run detekt
         run: ./gradlew detektAll
 
@@ -63,18 +40,6 @@ jobs:
           name: detekt-reports
           path: build/reports/*
 
-      - name: Get directory
-        run: ls
-
-      - name: Get into reports
-        run: |
-          cd build/reports
-          ls -d "$PWD"/*
-          cd detekt
-          ls -d "$PWD"/*
-          cd ../ktlint
-          ls -d "$PWD"/*
-
   danger:
     #needs: [lint, ktlint, detekt]
     if: ${{ always() }}
@@ -83,14 +48,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Download ktlint reports artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: ktlint-reports
-
-      - name: Display ktlint-reports files
-        run: ls -R
 
       - name: Download detekt reports artifact
         uses: actions/download-artifact@v3
@@ -133,6 +90,6 @@ jobs:
 
       - name: Run danger
         run: |
-          bundle exec danger --verbose
+          bundle exec danger --dangerfile=Dangerfile --danger_id=danger-pr --verbose
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
