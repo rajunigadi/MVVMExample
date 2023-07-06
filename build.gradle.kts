@@ -59,6 +59,7 @@ tasks.register<Detekt>("detektAll") {
     reports {
         html.required.set(true)
         xml.required.set(true)
+        sarif.required.set(true)
         txt.required.set(false)
         reportsDir.set(file(reportsPath))
     }
